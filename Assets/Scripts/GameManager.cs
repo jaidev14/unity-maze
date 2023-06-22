@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private void BeginGame() {
         mazeInstance = Instantiate(mazePrefab) as Maze;
         // mazeInstance.Generate();
-        StartCoroutine(mazeInstance.GenerateRandomWithDelay());
+        StartCoroutine(mazeInstance.Generate());
     }
     private void RestartGame() {
         StopAllCoroutines();
