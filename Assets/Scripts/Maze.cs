@@ -47,7 +47,12 @@ public class Maze : MonoBehaviour
     private void DoNextGenerationStep(List<MazeCell> activeCells) {
         int currentIndex = activeCells.Count - 1;
         MazeCell currentCell = activeCells[currentIndex];
-        MazeDirection direction = MazeDirections.RandomValue;
+        if (currentCell.IsFullyInitialized) {
+            activeCells.RemoveAt(currentIndex);
+            return;
+        }
+
+        MazeDirection direction = currentCell.RandomUninitializedDirecion;
         IntVector2 coordinates = currentCell.coordinates + direction.ToIntVector2();
         // If we are inside the maze, check if a neighbor doesnt exist. If not, create passage. If yes, create wall
         if (ContainsCoordinates(coordinates)) {
@@ -58,11 +63,9 @@ public class Maze : MonoBehaviour
                 activeCells.Add(neighbor);
             } else {
                 CreateWall(currentCell, neighbor, direction);
-                activeCells.RemoveAt(currentIndex);
             }
         } else {
             CreateWall(currentCell, null, direction);
-            activeCells.RemoveAt(currentIndex);
         }
     }
 

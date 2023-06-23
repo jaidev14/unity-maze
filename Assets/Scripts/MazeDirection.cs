@@ -15,6 +15,7 @@ public static class MazeDirections {
             return (MazeDirection)Random.Range(0, Count);
         }
     }
+    
     private static IntVector2[] vectors = {
         new IntVector2(0, 1),
         new IntVector2(1, 0),
