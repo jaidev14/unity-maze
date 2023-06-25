@@ -67,6 +67,9 @@ public class Maze : MonoBehaviour
                 neighbor = CreateCell(coordinates);
                 CreatePassage(currentCell, neighbor, direction);
                 activeCells.Add(neighbor);
+            } else if (currentCell.room.settingsIndex == neighbor.room.settingsIndex) {
+                // We could just check if the room is the same for the joining, but this way we get bigger rooms 
+                CreatePassageInSameRoom(currentCell, neighbor, direction);
             } else {
                 CreateWall(currentCell, neighbor, direction);
             }
@@ -80,7 +83,7 @@ public class Maze : MonoBehaviour
         MazePassage passage = Instantiate(prefab) as MazePassage;
         passage.Initialize(cell, otherCell, direction);
         passage = Instantiate(passagePrefab) as MazePassage;
-        // Should be "passage is MazeDoor" or "GetComponent<MazeDoor>() != null" but for some reason they dont work and these do so ¯\_(ツ)_/¯
+        // Should be "passage is MazeDoor" or "GetComponent<MazeDoor>() != null" but for some reason they dont work and this does so ¯\_(ツ)_/¯
         if (prefab == doorPrefab) {
             otherCell.Initialize(CreateRoom(cell.room.settingsIndex));
         } else {
@@ -88,6 +91,19 @@ public class Maze : MonoBehaviour
         }
 
         passage.Initialize(otherCell, cell, direction.GetOpposite());
+    }
+
+    private void CreatePassageInSameRoom(MazeCell cell, MazeCell otherCell, MazeDirection direction) {
+        MazePassage passage = Instantiate(passagePrefab) as MazePassage;
+        passage.Initialize(cell, otherCell, direction);
+        passage = Instantiate(passagePrefab) as MazePassage;
+        passage.Initialize(otherCell, cell, direction.GetOpposite());
+        if (cell.room != otherCell.room) {
+            MazeRoom roomToAssimilate = otherCell.room;
+            cell.room.Assimilate(roomToAssimilate);
+            rooms.Remove(roomToAssimilate);
+            Destroy(roomToAssimilate);
+        }
     }
 
     private void CreateWall(MazeCell cell, MazeCell otherCell, MazeDirection direction) {

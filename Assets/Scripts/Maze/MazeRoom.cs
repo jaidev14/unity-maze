@@ -9,5 +9,12 @@ public class MazeRoom : ScriptableObject
     public void Add (MazeCell cell) {
         cell.room = this;
         cells.Add(cell);
-    } 
+    }
+
+    public void Assimilate(MazeRoom room) {
+        for (int i = 0; i < room.cells.Count; i++)
+        {
+            Add(room.cells[i]);
+        }
+    }
 }
