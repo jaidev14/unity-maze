@@ -13,6 +13,13 @@ public struct IntVector2
         return a;
     }
 
+    public override string ToString()
+    {
+        return x + ":" + z;
+    }
+
+
+
     
 }
 
