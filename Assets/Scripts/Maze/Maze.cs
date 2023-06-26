@@ -42,6 +42,10 @@ public class Maze : MonoBehaviour
             yield return delay;
             DoNextGenerationStep(activeCells);
         }
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            rooms[i].Hide();
+        }
     }
 
     private void DoFirstGenerationStep(List<MazeCell> activeCells) {
@@ -58,7 +62,7 @@ public class Maze : MonoBehaviour
             return;
         }
 
-        MazeDirection direction = currentCell.RandomUninitializedDirecion;
+        MazeDirection direction = currentCell.RandomUninitializedDirection;
         IntVector2 coordinates = currentCell.coordinates + direction.ToIntVector2();
         // If we are inside the maze, check if a neighbor doesnt exist. If not, create passage. If yes, create wall
         if (ContainsCoordinates(coordinates)) {
@@ -82,9 +86,8 @@ public class Maze : MonoBehaviour
         MazePassage prefab = Random.value < doorProbability ? doorPrefab : passagePrefab;
         MazePassage passage = Instantiate(prefab) as MazePassage;
         passage.Initialize(cell, otherCell, direction);
-        passage = Instantiate(passagePrefab) as MazePassage;
-        // Should be "passage is MazeDoor" or "GetComponent<MazeDoor>() != null" but for some reason they dont work and this does so ¯\_(ツ)_/¯
-        if (prefab == doorPrefab) {
+        passage = Instantiate(prefab) as MazePassage;
+        if (passage is MazeDoor) {
             otherCell.Initialize(CreateRoom(cell.room.settingsIndex));
         } else {
             otherCell.Initialize(cell.room);

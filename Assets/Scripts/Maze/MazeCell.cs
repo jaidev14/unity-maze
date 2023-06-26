@@ -10,7 +10,7 @@ public class MazeCell : MonoBehaviour
             return initializedEdgeCount == MazeDirections.Count;
         }
     }
-    public MazeDirection RandomUninitializedDirecion {
+    public MazeDirection RandomUninitializedDirection {
         get {
             int skips = Random.Range(0, MazeDirections.Count - initializedEdgeCount);
             for (int i = 0; i < MazeDirections.Count; i++)
@@ -39,5 +39,29 @@ public class MazeCell : MonoBehaviour
     public void Initialize(MazeRoom room) {
         room.Add(this);
         transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+    }
+
+    public void OnPlayerEntered() {
+        room.Show();
+        for (int i = 0; i < edges.Length; i++)
+        {
+            edges[i].OnPlayerEntered();
+        }
+    }
+
+    public void OnPlayerExited() {
+        room.Hide();
+        for (int i = 0; i < edges.Length; i++)
+        {
+            edges[i].OnPlayerExited();
+        }
+    }
+
+    public void Hide() {
+        gameObject.SetActive(false);
+    }
+
+    public void Show() {
+        gameObject.SetActive(true);
     }
 }
